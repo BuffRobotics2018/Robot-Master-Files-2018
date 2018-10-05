@@ -125,14 +125,14 @@ task driveMotor()
 		while((rightTriggerD) && (leftTriggerD) == true)
 		{
 
-			stopMotor[drive];
+			stopMotor(drive);
 
 		}
 
 		while((rightTriggerD) && (leftTriggerD) == false)
 		{
 
-			stopMotor[drive];
+			stopMotor(drive);
 
 		}
 
