@@ -24,7 +24,8 @@ task moveRobot() // Will move robot forward and backward with channel 3 movement
 		if (!(abs(driveVelocity) < joystickThreshold) && driveVelocity) /* to prevent accidental joystick bumps,
 			when the joystick is moved enough, the motor starts */
 		{
-			motor[drive] = driveVelocity; // sets 'drive' motor direction and speed as driveVelocity
+			 motor[drive] = driveVelocity; // sets 'drive' motor direction and speed as driveVelocity
+			 wait1Msec(5000);
 		}
 		else
 		{
@@ -90,6 +91,7 @@ task armExtendRetract() // Moves arm forwards and backwards with channel 2 //
 		if (!(abs(armExtension) < joystickThreshold))
 		{
 			motor[arm] = armExtension; // the direction and speed of motor 'arm' are determined
+			wait1Msec(5000);
 		}
 		else
 		{
@@ -130,6 +132,7 @@ task armRotation() // Rotates arm platform with joystick channel 1
 		if (!(abs(armRotate) < joystickThreshold))
 		{
 			motor[armPivot] = armRotate;
+			wait1Msec(5000);
 		}
 		else
 		{
@@ -168,6 +171,7 @@ task armUpAndDown()
 		if (!(abs(upDownJoystick) < joystickThreshold))
 		{
 			motor[armUpDown] = upDownJoystick; // the direction and speed of motor 'armUpDown' are determined
+			wait1Msec(5000);
 		}
 		else
 		{
