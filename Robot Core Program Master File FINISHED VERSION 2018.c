@@ -19,16 +19,16 @@ task moveRobot() // Will move robot forward and backward with channel 3 movement
 	{
 
 		int driveVelocity = vexRT[Ch3]; // maps the drive motor direction and speed to channel 3
-		int forwards = vexRT[Btn5U]; // maps varaible that moves robot forward to button 6U 
+		int forwards = vexRT[Btn5U]; // maps varaible that moves robot forward to button 6U
 		int backwards = vexRT[Btn5D]; //maps variable that moves robot backward to button 5U
-		if (!(abs(driveVelocity) < joystickThreshold) && driveVelocity) /* to prevent accidental joystick bumps, 
+		if (!(abs(driveVelocity) < joystickThreshold) && driveVelocity) /* to prevent accidental joystick bumps,
 			when the joystick is moved enough, the motor starts */
 		{
 			motor[drive] = driveVelocity; // sets 'drive' motor direction and speed as driveVelocity
 		}
 		else
 		{
-			stopMotor(drive); // if channel 3 is not in use, stop motor 'drive' 
+			stopMotor(drive); // if channel 3 is not in use, stop motor 'drive'
 		}
 
 	if (forwards)// while button 5U is pressed the motor 'drive' goes at positiveMovementSpeed
@@ -40,12 +40,12 @@ task moveRobot() // Will move robot forward and backward with channel 3 movement
 		{
 			stopMotor(drive);
 		}
-		if (backwards)// while Btn5D is pressed the motor 'drive' goes at negativeMovementSpeed 
+		if (backwards)// while Btn5D is pressed the motor 'drive' goes at negativeMovementSpeed
 		{
 			motor[drive] = negativeMovementSpeed;
 			wait1Msec(5000);
 		}
-		else// when Btn5D is released, the motor 'drive' will stop 
+		else// when Btn5D is released, the motor 'drive' will stop
 		{
 			stopMotor(drive);
 		}
@@ -82,14 +82,14 @@ task armExtendRetract() // Moves arm forwards and backwards with channel 2 //
 {
 	while(true)// Program will constantly check for these events //
 	{
-		
+
 		int armExtension = vexRT[Ch4]; // maps variable 'armExtension' to channel 4
 		int extend = vexRT[Btn6U]; // maps variable 'extend' to Btn6U
 		int retract = vexRT[Btn6D]; // maps variabe 'retract' to Btn6D
 
 		if (!(abs(armExtension) < joystickThreshold))
 		{
-			motor[arm] = armExtension; // the direction and speed of motor 'arm' are determined 
+			motor[arm] = armExtension; // the direction and speed of motor 'arm' are determined
 		}
 		else
 		{
@@ -157,27 +157,6 @@ task armRotation() // Rotates arm platform with joystick channel 1
 	}
 }
 
-task speedChange()
-{
-	while (true)
-	{
-		if (vexRT[Btn7D] && highLowSwitch == 1)
-		{
-			positiveMovementSpeed = 63;
-			negativeMovementSpeed = -63;
-			highLowSwitch *= -1;
-			
-		}
-		if (vexRT[Btn7D] && highLowSwitch == -1)
-		{
-			positiveMovementSpeed = 127;
-			negativeMovementSpeed = -127;
-			highLowSwitch *= -1;
-			
-		}
-	}
-}
-
 task armUpAndDown()
 {
 	while(true)
@@ -185,17 +164,17 @@ task armUpAndDown()
 		int armUp = vexRT[Btn7U];
 		int armDown = vexRT[Btn7D];
 		int upDownJoystick = vexRT[Ch2];
-		
+
 		if (!(abs(upDownJoystick) < joystickThreshold))
 		{
-			motor[armUpDown] = upDownJoystick; // the direction and speed of motor 'arm' are determined 
+			motor[armUpDown] = upDownJoystick; // the direction and speed of motor 'armUpDown' are determined
 		}
 		else
 		{
-			stopMotor(armUpDown); // if the channel 2 joystick is not being used, stop the motor 'arm'
+			stopMotor(armUpDown); // if the channel 2 joystick is not being used, stop the motor 'armUpDown'
 		}
 
-		if (armUp)// while Btn5D is pressed, set motor "arm" speed to 127 //
+		if (armUp)// while Btn5D is pressed, set motor "arm" speed to positiveMovementSpeed //
 		{
 			motor[armUpDown] = positiveMovementSpeed;
 			wait1Msec(5000);
@@ -216,7 +195,26 @@ task armUpAndDown()
 	}
 }
 
+task speedChange()
+{
+	while (true)
+	{
+		if (vexRT[Btn7D] && highLowSwitch == 1)
+		{
+			positiveMovementSpeed = 63;
+			negativeMovementSpeed = -63;
+			highLowSwitch *= -1;
 
+		}
+		if (vexRT[Btn7D] && highLowSwitch == -1)
+		{
+			positiveMovementSpeed = 127;
+			negativeMovementSpeed = -127;
+			highLowSwitch *= -1;
+
+		}
+	}
+}
 
 task main()
 {
