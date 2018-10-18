@@ -9,9 +9,16 @@
 int positiveMovementSpeed = 127; // positive movement speed variables
 int negativeMovementSpeed = -127; // negative movement speed variables
 
-int liftSpeed = -60;// speed needed to make the motor lift the arm //
+//int liftSpeed = -60;// speed needed to make the motor lift the arm //
 int neutralSpeed = -30;// speed needed to make the motor maintain the arm's position //
-int lowerSpeed = 0;// speed needed to let gravity lower the arm at a reasonable rate //
+//int lowerSpeed = 0;// speed needed to let gravity lower the arm at a reasonable rate //
+
+bool clawAOpenClose = true;
+bool clawBOpenClose = true;
+
+int servoAPosition = -127;
+int servoBPosition = 127;
+int servoIncrement = 5;
 
 //bool speedChangeUp = false;// variable used to tell the robot when a specific part of the code is running //
 //bool speedChangeDown = false;// variable used to tell the robot when a specific part of the code is running //
@@ -24,123 +31,141 @@ task clawMove() // Will open and close each claw using buttons Btn8U, Btn8L, Btn
 {
 	while(true)
 	{
-
-		if(vexRT[Btn8R])// when Btn8R is pressed, clawServoB will open //
+		if(vexRT[Btn8R])// when Btn8R is pressed, clawServoA will open //
 		{
-			motor[clawServoA] = 127;
+			if (clawAOpenClose)
+			{
+				servoAPosition += servoIncrement;
+				motor[clawServoA] = servoAPosition;
+			}	
+			else
+			{
+				servoAPosition -= servoIncrement;
+				motor[clawServoA] = servoAPosition;
+			}
 		}
-
-		if(vexRT[Btn8D])// when Btn8D is pressed, clawServoB will close //
+		if(vexRT[Btn8L])// when Btn8R is pressed, clawServoB will open //
 		{
-			motor[clawServoA] = 0;
+			if (clawBOpenClose)
+			{
+				servoBPosition += servoIncrement;
+				motor[clawServoB] = servoBPosition;
+			}
+			else
+			{
+				servoBPosition -= servoIncrement;
+				motor[clawServoB] = servoBPosition;
+			}
 		}
-		
-		if(vexRT[Btn8L])
-		{
-			motor[clawServoB] = 0;
-		}
-		
 		if(vexRT[Btn8U])
 		{
-			motor[clawServoB] = 127;
+			if (clawAOpenClose)
+			{
+				clawAOpenClose = false;
+				clawBOpenClose = false;
+			}
+			else
+			{
+				clawAOpenClose = true;
+				clawBOpenClose = true;
+			}
 		}
 	}
 }
 
 /*task motorSpeedInc()// changes the speed of the motors slowly //
 {
-	while(vexRT[Btn6U])// as long as button 6U is pressed... //
-	{
-		neutralSpeed += 1;// add 1 to neutralSpeed... //
-		wait1Msec(250);// wait 0.25 seconds //
-	}
-	while(vexRT[Btn6D])// as long as button 6D is pressed... //
-	{
-		neutralSpeed -= 1;// add 1 to neutralSpeed... //
-		wait1Msec(250);// wait 0.25 seconds //
-	}
+while(vexRT[Btn6U])// as long as button 6U is pressed... //
+{
+neutralSpeed += 1;// add 1 to neutralSpeed... //
+wait1Msec(250);// wait 0.25 seconds //
+}
+while(vexRT[Btn6D])// as long as button 6D is pressed... //
+{
+neutralSpeed -= 1;// add 1 to neutralSpeed... //
+wait1Msec(250);// wait 0.25 seconds //
+}
 }*/
 
 /*task spdChngSwitch()// switches values of speed variables to find best suited for robot manipulation //
 {
-	if (vexRT[Btn5U])
-	{
-		liftSpeed = 10;
-		neutralSpeed = -20;
-		lowerSpeed = -50;
-	}
-	if (vexRT[Btn5D])
-	{
-		liftSpeed = 60;
-		neutralSpeed = 30;
-		lowerSpeed = 0;
-	}
+if (vexRT[Btn5U])
+{
+liftSpeed = 10;
+neutralSpeed = -20;
+lowerSpeed = -50;
+}
+if (vexRT[Btn5D])
+{
+liftSpeed = 60;
+neutralSpeed = 30;
+lowerSpeed = 0;
+}
 }*/
 
 task moveRobot() // Will move robot forward and backward with channel 3 movement
 {
 	while(true)// Program will constantly check for these events //
 	{
-/*	int forwards = vexRT[Btn5U]; // maps varaible that moves robot forward to button 6U
+		/*	int forwards = vexRT[Btn5U]; // maps varaible that moves robot forward to button 6U
 		int backwards = vexRT[Btn5D]; //maps variable that moves robot backward to button 5U */
 		while((abs(vexRT[Ch3]) > joystickThreshold) && vexRT[Ch3]) /* to prevent accidental joystick bumps,
-		when the joystick is moved enough, the motor starts */
+			when the joystick is moved enough, the motor starts */
 		{
-			 motor[drive] = vexRT[Ch3]; // sets 'drive' motor direction and speed as driveVelocity
+			motor[drive] = vexRT[Ch3]; // sets 'drive' motor direction and speed as driveVelocity
 		}
 		while(abs(vexRT[Ch3]) < joystickThreshold)
 		{
 			stopMotor(drive); // if channel 3 is not in use, stop motor 'drive'
 		}
-/*		if (forwards)// while button 5U is pressed the motor 'drive' goes at positiveMovementSpeed
+		/*		if (forwards)// while button 5U is pressed the motor 'drive' goes at positiveMovementSpeed
 		{
-			motor[drive] = positiveMovementSpeed;
-			wait1Msec(5000);
+		motor[drive] = positiveMovementSpeed;
+		wait1Msec(5000);
 		}
 		else// when Btn5U is released, the motor 'drive' will stop //
 		{
-			stopMotor(drive);
+		stopMotor(drive);
 		}
 		if (backwards)// while Btn5D is pressed the motor 'drive' goes at negativeMovementSpeed
 		{
-			motor[drive] = negativeMovementSpeed;
-			wait1Msec(5000);
+		motor[drive] = negativeMovementSpeed;
+		wait1Msec(5000);
 		}
 		else// when Btn5D is released, the motor 'drive' will stop
 		{
-			stopMotor(drive);
+		stopMotor(drive);
 		}*/
 	}
 }
 
 /*task speedChange()
 {
-	while (true)
-	{
-		if (vexRT[Btn7R] && highLowSwitch == 1)
-		{
-			positiveMovementSpeed = 63;
-			negativeMovementSpeed = -63;
-			highLowSwitch *= -1;
-			wait1Msec(1500);
-		}
-		if (vexRT[Btn7L] && highLowSwitch == -1)
-		{
-			positiveMovementSpeed = 127;
-			negativeMovementSpeed = -127;
-			highLowSwitch *= -1;
-			wait1Msec(1500);
-		}
-	}
+while (true)
+{
+if (vexRT[Btn7R] && highLowSwitch == 1)
+{
+positiveMovementSpeed = 63;
+negativeMovementSpeed = -63;
+highLowSwitch *= -1;
+wait1Msec(1500);
+}
+if (vexRT[Btn7L] && highLowSwitch == -1)
+{
+positiveMovementSpeed = 127;
+negativeMovementSpeed = -127;
+highLowSwitch *= -1;
+wait1Msec(1500);
+}
+}
 }*/
 
 task armExtendRetract() // Moves arm forwards and backwards with channel 2 //
 {
 	while(true)// Program will constantly check for these events //
 	{
-//		int extend = vexRT[Btn7R]; // maps variable 'extend' to Btn6U
-	//	int retract = vexRT[Btn7L]; // maps variabe 'retract' to Btn6D
-
+		//		int extend = vexRT[Btn7R]; // maps variable 'extend' to Btn6U
+		//	int retract = vexRT[Btn7L]; // maps variabe 'retract' to Btn6D
 		while(!(abs(vexRT[Ch4]) < joystickThreshold))
 		{
 			motor[arm] = vexRT[Ch4]; // the direction and speed of motor 'arm' are determined
@@ -149,75 +174,109 @@ task armExtendRetract() // Moves arm forwards and backwards with channel 2 //
 		{
 			stopMotor(arm); // if the channel 2 joystick is not being used, stop the motor 'arm'
 		}
-		
 		while(vexRT[Btn6U])// when button 7U is pressed AND the other command in this task is not running, run this statement //
 		{
-			motor[armPitch] = positiveMovementSpeed;// set armPivot speed to value of variable "liftSpeed" //
+			motor[arm] = positiveMovementSpeed;// set armPivot speed to value of variable "liftSpeed" //
 		}
 		while(vexRT[Btn6D])// when button 7D is pressed AND the other command in this task is not running, run this command //
 		{
-			motor[armPitch] = negativeMovementSpeed;// set armPivot speed to value of variable "lowerSpeed" //
+			motor[arm] = negativeMovementSpeed;// set armPivot speed to value of variable "lowerSpeed" //
 		}
-	/*	if (extend)// while Btn5D is pressed, set motor "arm" speed to 127 //
+		/*	if (extend)// while Btn5D is pressed, set motor "arm" speed to 127 //
 		{
-			motor[arm] = positiveMovementSpeed;
-			wait1Msec(5000);
+		motor[arm] = positiveMovementSpeed;
+		wait1Msec(5000);
 		}
 		else// once Btn5D is released, the motor will stop //
 		{
-			stopMotor(arm);
+		stopMotor(arm);
 		}
 		if (retract)// while Btn6D is pressed, set motor "arm" speed to -127 //
 		{
-			motor[arm] = negativeMovementSpeed;
-			wait1Msec(5000);
+		motor[arm] = negativeMovementSpeed;
+		wait1Msec(5000);
 		}
 		else// once Btn6D is released, the motor will stop //
 		{
-			stopMotor(arm);
+		stopMotor(arm);
 		}*/
 	}
 }
 
-task armUpDown()// Controls the vertical movement of the arm using motor armPivot //
+/*task armUpDown()// Controls the vertical movement of the arm using motor armPivot //
+{
+while(true)
+{
+while(vexRT[Btn7U])// when button 7U is pressed AND the other command in this task is not running, run this statement //
+{
+motor[armPitch] = liftSpeed;// set armPivot speed to value of variable "liftSpeed" //
+}
+while(vexRT[Btn7D])// when button 7D is pressed AND the other command in this task is not running, run this command //
+{
+motor[armPitch] = lowerSpeed;// set armPivot speed to value of variable "lowerSpeed" //
+}
+while((vexRT[Btn7U] == false) && (vexRT[Btn7D] == false))
+{
+motor[armPitch] = neutralSpeed;
+}
+}
+}
+*/
+
+task armUpDown()// Controls the vertical movement of the arm using a shifting motor variable
 {
 	while(true)
 	{
-		while(vexRT[Btn7U])// when button 7U is pressed AND the other command in this task is not running, run this statement //
+		if(vexRT[Btn7U])
 		{
-			motor[armPitch] = liftSpeed;// set armPivot speed to value of variable "liftSpeed" //
+			if(neutralSpeed<=127)
+			{
+				neutralSpeed+=1;
+				motor[armPitch] = neutralSpeed;
+				wait1Msec(10);
+			}
+			else
+			{
+				neutralSpeed=127;
+				motor[armPitch] = neutralSpeed;
+			}
 		}
-		while(vexRT[Btn7D])// when button 7D is pressed AND the other command in this task is not running, run this command //
+		if(vexRT[Btn7D])
 		{
-			motor[armPitch] = lowerSpeed;// set armPivot speed to value of variable "lowerSpeed" //
-		}
-		while((vexRT[Btn7U] == false) && (vexRT[Btn7D] == false))
-		{
-			motor[armPitch] = neutralSpeed;
-		}
+			if(neutralSpeed>=-127)
+			{
+				neutralSpeed-=1;
+				motor[armPitch] = neutralSpeed;
+				wait1Msec(10);
+			}
+			else
+			{
+				neutralSpeed=-127;
+				motor[armPitch] = neutralSpeed;
+			}
+		}		
 	}
 }
-
 /*task oneButtonExtend()
 {
-	while (true)
-	{
-		if (vexRT[Btn8L])
-		{
-			motor[armPitch] = 100;
-			// wait1Msec(750);
-			// motor[armPitch] = 0;
-			motor[arm] = 100;
-			// wait1Msec(750);
-			// motor[arm] = 0;
-			motor[armPitch] = -100;
-			// wait1Msec(750);
-			// motor[armPitch] = 0;
-			// motor[arm] = -100;
-			// wait1Msec(750);
-			// motor[arm] = 0;
-		}
-	}
+while (true)
+{
+if (vexRT[Btn8L])
+{
+motor[armPitch] = 100;
+// wait1Msec(750);
+// motor[armPitch] = 0;
+motor[arm] = 100;
+// wait1Msec(750);
+// motor[arm] = 0;
+motor[armPitch] = -100;
+// wait1Msec(750);
+// motor[armPitch] = 0;
+// motor[arm] = -100;
+// wait1Msec(750);
+// motor[arm] = 0;
+}
+}
 }*/
 
 task armRotation() // Rotates arm platform with joystick channel 1
@@ -225,8 +284,8 @@ task armRotation() // Rotates arm platform with joystick channel 1
 	while(true)
 	{
 
-// sets the held/released value of Btn7R to the variable "rotateRight" //
-// sets the held/released value of Btn7L to the variable "rotateLeft" //
+		// sets the held/released value of Btn7R to the variable "rotateRight" //
+		// sets the held/released value of Btn7L to the variable "rotateLeft" //
 
 		while (!(abs(vexRT[Ch1]) < joystickThreshold))
 		{
@@ -239,10 +298,6 @@ task armRotation() // Rotates arm platform with joystick channel 1
 		while (vexRT[Btn7R])// while Btn7R is pressed, set motor "armPivot" speed to 127 (rotates right) //
 		{
 			motor[armPivot] = positiveMovementSpeed;
-		}
-		while(vexRT[Btn7R] == false)// once Btn7R is released, the motor will stop //
-		{
-			stopMotor(armPivot);
 		}
 		while (vexRT[Btn7L])// while Btn7L is pressed, set motor "armPivot" speed to -127 (rotates left) //
 		{
@@ -262,12 +317,12 @@ task main()
 	{
 		startTask(moveRobot);// task which moves robot forwards and backwards
 		startTask(armExtendRetract);// task which moves the arm forwards and backwards
-	//startTask(speedChange);// task which changes the speed of the motors
+		//startTask(speedChange);// task which changes the speed of the motors
 		startTask(armUpDown);
 		startTask(clawMove);
-	//startTask(spdChngSwitch);
-	//startTask(motorSpeedInc);
+		//startTask(spdChngSwitch);
+		//startTask(motorSpeedInc);
 		startTask(armRotation);
-	//startTask(oneButtonExtend);
+		//startTask(oneButtonExtend);
 	}
 }
